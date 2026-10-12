@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080b0d">
+  <meta name="description" content="Эхо — атмосферный платформер о мире, который можно увидеть только звуком. Восемь комнат, тайны и достижения. Для компьютера и телефона.">
+  <title>ЭХО · По ту сторону тишины</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="js/levels.js"></script>
+  <script defer src="js/storage.js"></script>
+  <script defer src="js/audio.js"></script>
+  <script defer src="js/engine.js"></script>
+  <script defer src="js/renderer.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="world" aria-label="Игровой мир Эхо"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <header id="topbar">
+      <button class="brand" data-action="home" aria-label="Главное меню">ЭХО<span class="brand-dot"></span></button>
+      <span class="top-tag" id="topTag">ПО ТУ СТОРОНУ ТИШИНЫ</span>
+      <div class="top-actions">
+        <button id="soundButton" class="icon-button" data-action="sound" aria-label="Выключить звук" title="Звук">♫</button>
+        <button id="pauseButton" class="icon-button hidden" data-action="pause" aria-label="Пауза" title="Пауза · Esc">Ⅱ</button>
+      </div>
+    </header>
+    <main id="screens">
+      <section id="home" class="screen home-screen">
+        <div class="home-copy">
+          <p class="eyebrow"><span class="live-dot"></span> АТМОСФЕРНЫЙ ПЛАТФОРМЕР</p>
+          <h1>ЭХО<span class="title-ghost" aria-hidden="true">ЭХО</span></h1>
+          <p class="subtitle">По ту сторону тишины</p>
+          <p class="intro">Мир исчез. Остался звук.<br>Сделай шаг — и темнота ответит.</p>
+          <div class="home-buttons">
+            <button id="playButton" class="button primary" data-action="continue">Начать путь <span>↗</span></button>
+            <button class="button secondary" data-action="levels">Комнаты <span>01—08</span></button>
+          </div>
+          <div class="home-links">
+            <button data-action="achievements">Достижения <span id="achievementCount">0 / 16</span></button>
+            <button data-action="settings">Настройки</button>
+            <button data-action="help">Как играть</button>
+          </div>
+        </div>
+        <div class="home-note"><span class="note-line"></span><span>НЕ ВИДИШЬ?<br><strong>ПРИСЛУШАЙСЯ.</strong></span></div>
+        <div class="home-bottom"><span>08 КОМНАТ · 24 ОБРЫВКА ПАМЯТИ</span><span>Идея Маши · создано вместе с Женей</span></div>
+      </section>
+      <section id="levels" class="screen panel-screen hidden" aria-labelledby="levelsTitle">
+        <div class="panel wide"><div class="panel-heading"><div><p class="eyebrow">СПУСК В НЕИЗВЕСТНОСТЬ</p><h2 id="levelsTitle">Комнаты</h2></div><button class="close" data-action="home" aria-label="Назад">×</button></div><div id="levelGrid" class="level-grid"></div><p class="muted small">★ Выход найден · ◆ Все обрывки · ◇ Без потерь</p></div>
+      </section>
+      <section id="achievements" class="screen panel-screen hidden" aria-labelledby="achTitle">
+        <div class="panel wide"><div class="panel-heading"><div><p class="eyebrow" id="achProgress">0 ИЗ 16</p><h2 id="achTitle">Следы в темноте</h2></div><button class="close" data-action="back" aria-label="Назад">×</button></div><div id="achievementGrid" class="achievement-grid"></div></div>
+      </section>
+      <section id="settings" class="screen panel-screen hidden" aria-labelledby="settingsTitle">
+        <div class="panel"><div class="panel-heading"><div><p class="eyebrow">НАСТРОЙ МИР ПОД СЕБЯ</p><h2 id="settingsTitle">Настройки</h2></div><button class="close" data-action="back" aria-label="Назад">×</button></div>
+          <label class="setting">Звук <input id="audioToggle" type="checkbox"></label>
+          <label class="setting">Громкость <input id="volume" type="range" min="0" max="100" aria-label="Громкость"></label>
+          <label class="setting">Мягкое движение <input id="motionToggle" type="checkbox"></label>
+          <p class="muted small">Убирает дрожание камеры и уменьшает частицы.</p>
+          <label class="setting">Помощь в темноте <input id="assistToggle" type="checkbox"></label>
+          <p class="muted small">Контуры остаются едва заметными, волны держатся дольше. Можно менять в любой момент.</p>
+          <label class="setting">Экранные кнопки <select id="touchMode"><option value="auto">Автоматически</option><option value="on">Всегда</option><option value="off">Скрыть</option></select></label>
+          <button class="button secondary full" data-action="fullscreen">Полный экран ↗</button>
+          <p id="saveNotice" class="muted small">Прогресс сохраняется в этом браузере автоматически.</p>
+        </div>
+      </section>
+      <section id="help" class="screen panel-screen hidden" aria-labelledby="helpTitle">
+        <div class="panel"><div class="panel-heading"><div><p class="eyebrow">ПЕРЕД ПЕРВЫМ ШАГОМ</p><h2 id="helpTitle">Доверься эху</h2></div><button class="close" data-action="back" aria-label="Назад">×</button></div>
+          <p>Шаги и прыжки испускают белые волны. Они раскрывают контуры только на мгновение — запоминай дорогу.</p>
+          <div class="help-row"><kbd>A D</kbd><span>или ← → · движение</span></div><div class="help-row"><kbd>Пробел</kbd><span>W / ↑ · прыжок<br><small>Держи дольше, чтобы прыгнуть выше.</small></span></div><div class="help-row"><kbd>E / X</kbd><span>Сильный импульс · раскрывает мир и включает резонаторы</span></div><div class="help-row"><kbd>Shift</kbd><span>Тихий шаг · меньше звука</span></div><div class="help-row"><kbd>Esc / P</kbd><span>Пауза · R — вернуться к маяку</span></div>
+          <p class="muted small">На телефоне: стрелки слева, прыжок и эхо справа. Можно нажимать несколько кнопок одновременно. Удобнее играть горизонтально.</p>
+          <div class="legend"><span><i class="cyan">◆</i> Память</span><span><i>⚑</i> Маяк</span><span><i class="pink">△</i> Опасность</span><span><i class="cyan">◉</i> Резонатор</span></div>
+          <p class="muted small">Цель — добраться до выхода. Память собирать необязательно. Громкое эхо будит тех, кто живёт в темноте.</p>
+          <button class="button primary full" data-action="continue">Я готов <span>↗</span></button>
+        </div>
+      </section>
+      <section id="pause" class="screen panel-screen hidden" aria-labelledby="pauseTitle">
+        <div class="panel"><p class="eyebrow">МОЖНО ВЫДОХНУТЬ</p><h2 id="pauseTitle">Тишина.</h2><p class="muted">Мир подождёт.</p><div class="vertical-buttons"><button class="button primary" data-action="resume">Продолжить <span>↗</span></button><button class="button secondary" data-action="restart">Заново от маяка <span>↺</span></button><button class="button secondary" data-action="settings">Настройки</button><button class="button secondary" data-action="achievements">Достижения</button><button class="text-button" data-action="home">В главное меню</button></div></div>
+      </section>
+      <section id="complete" class="screen panel-screen hidden" aria-labelledby="completeTitle">
+        <div class="panel result-panel"><p class="eyebrow" id="completeEyebrow">КОМНАТА ПРОЙДЕНА</p><h2 id="completeTitle">Ты услышал выход.</h2><p id="completeStory" class="muted"></p><div id="resultStats" class="result-stats"></div><div class="vertical-buttons"><button id="nextButton" class="button primary" data-action="next">Следующая комната <span>↗</span></button><button class="button secondary" data-action="replay">Пройти ещё раз <span>↺</span></button><button class="text-button" data-action="levels">Все комнаты</button></div></div>
+      </section>
+    </main>
+    <div id="hud" class="hidden" aria-live="off">
+      <div class="room-info"><span id="roomNumber">01 / 08</span><strong id="roomName">Пробуждение</strong></div>
+      <div class="hud-right"><span id="memoriesHud">◆ 0 / 3</span><span id="timeHud">00:00</span></div>
+      <div class="sonar-status"><span>ЭХО</span><div class="charge-track"><i id="chargeFill"></i></div><span id="chargeText">ГОТОВО</span></div>
+      <p id="gameHint" class="game-hint"></p>
+    </div>
+    <div id="touchControls" class="hidden" aria-label="Сенсорное управление"><div class="touch-left"><button data-control="left" aria-label="Влево">←</button><button data-control="right" aria-label="Вправо">→</button></div><div class="touch-right"><button data-control="quiet" class="quiet-button" aria-label="Тихий шаг">тише</button><button data-control="sonar" class="sonar-button" aria-label="Импульс эхо">◎<small>эхо</small></button><button data-control="jump" class="jump-button" aria-label="Прыжок">↑<small>прыжок</small></button></div></div>
+    <footer id="controlsFooter"><span><kbd>A D</kbd> двигаться</span><span><kbd>Пробел</kbd> прыжок</span><span><kbd>E</kbd> эхо</span><span><kbd>Shift</kbd> тише</span><span><kbd>Esc</kbd> пауза</span></footer>
+    <div id="toastStack" role="status" aria-live="polite"></div>
+    <div id="levelBanner" class="level-banner hidden"><span id="bannerNumber">КОМНАТА 01</span><h2 id="bannerTitle">Пробуждение</h2><p id="bannerText"></p></div>
+    <noscript>Для «Эхо» нужно включить JavaScript в браузере.</noscript>
+  </div>
+</body>
+</html>
